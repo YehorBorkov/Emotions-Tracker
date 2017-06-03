@@ -9,7 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        
+        <provider
+            android:authorities="com.egorb.emotionstracker"
+            android:name="com.egorb.emotionstracker.data.EmotionsContentProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>
