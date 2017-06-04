@@ -3,6 +3,7 @@ package com.egorb.emotionstracker.service;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -24,11 +25,17 @@ import java.util.Locale;
 
 public class EmotionsListAdapter extends RecyclerView.Adapter<EmotionsListAdapter.EmotionsViewholder> {
 
+    private EmotionsAdapterOnClickHandler mClickHandler;
     private Cursor mCursor;
     private Context mContext;
 
-    public EmotionsListAdapter(Context context) {
+    public interface EmotionsAdapterOnClickHandler {
+        void onClick(int id);
+    }
+
+    public EmotionsListAdapter(@NonNull Context context, EmotionsAdapterOnClickHandler clickHandler) {
         mContext = context;
+        mClickHandler = clickHandler;
     }
 
     @Override
@@ -120,7 +127,7 @@ public class EmotionsListAdapter extends RecyclerView.Adapter<EmotionsListAdapte
         return temp;
     }
 
-    class EmotionsViewholder extends RecyclerView.ViewHolder {
+    class EmotionsViewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView mEmotionImageViev;
         TextView mRatingTextView, mCommentTextView, mTimestampTextView;
         ProgressBar mRatingProgress;
@@ -132,6 +139,17 @@ public class EmotionsListAdapter extends RecyclerView.Adapter<EmotionsListAdapte
             mRatingProgress = (ProgressBar) view.findViewById(R.id.rv_item_progress_rating);
             mCommentTextView = (TextView) view.findViewById(R.id.rv_item_text_comment);
             mTimestampTextView = (TextView) view.findViewById(R.id.rv_item_text_timestamp);
+            view.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
+            mCursor.moveToPosition(adapterPosition);
+            int id = mCursor.getInt(mCursor.getColumnIndex(EmotionsContract.EmotionsEntry._ID));
+            Log.i("Clicked", String.valueOf(id));
+            mClickHandler.onClick(id);
+        }
+
     }
 }

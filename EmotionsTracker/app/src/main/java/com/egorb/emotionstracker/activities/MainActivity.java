@@ -21,7 +21,7 @@ import com.egorb.emotionstracker.data.EmotionsContract;
 import com.egorb.emotionstracker.service.EmotionsListAdapter;
 
 public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, EmotionsListAdapter.EmotionsAdapterOnClickHandler {
 
     private static final int EMOTIONS_LOADER_ID = 819;
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_main);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new EmotionsListAdapter(this);
+        mAdapter = new EmotionsListAdapter(this, this);
         mRecyclerView.setAdapter(mAdapter);
         DividerItemDecoration dividerItemDecoration =
                 new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
@@ -139,5 +139,13 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onClick(int id) {
+        Intent emotionDetailIntent = new Intent(MainActivity.this, DetailsActivity.class);
+        Uri uriForDetails = EmotionsContract.EmotionsEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(id)).build();
+        emotionDetailIntent.setData(uriForDetails);
+        startActivity(emotionDetailIntent);
     }
 }
