@@ -22,6 +22,8 @@ public final class EmotionsContract {
         public static final String COLUMN_TIMESTAMP = "timestamp";
         public static final String COLUMN_IMAGE = "image";
         public static final String COLUMN_PLACE_ID = "place_id";
+        public static final String COLUMN_PLACE_NAME = "place_name";
+        public static final String COLUMN_PLACE_ADDRESS = "place_address";
 
     }
 }

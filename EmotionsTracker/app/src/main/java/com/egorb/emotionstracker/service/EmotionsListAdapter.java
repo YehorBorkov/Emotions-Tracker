@@ -2,6 +2,7 @@ package com.egorb.emotionstracker.service;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.egorb.emotionstracker.R;
 import com.egorb.emotionstracker.data.EmotionsContract;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,9 +59,37 @@ public class EmotionsListAdapter extends RecyclerView.Adapter<EmotionsListAdapte
             resultDate = "Unable to fetch date data";
         }
         String comment = mCursor.getString(mCursor.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_COMMENT));
-        String image = mCursor.getString(mCursor.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_IMAGE));
+        final String image = mCursor.getString(mCursor.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_IMAGE));
 
-        ImageProvider.setImage(mContext, holder.mEmotionImageViev, image);
+        if (image.length() < 4) {
+            ImageProvider.setImage(mContext, holder.mEmotionImageViev, image);
+        } else {
+//            Log.i("Image uri:", image);
+//            Picasso.with(mContext).load(Uri.parse(image)).into(holder.mEmotionImageViev, new com.squareup.picasso.Callback() {
+//                @Override
+//                public void onSuccess() {
+//                    Log.i("Img loaded via URI", Uri.parse(image).toString());
+//                }
+//                @Override
+//                public void onError() {
+//                    Log.i("Img not loaded via URI", Uri.parse(image).toString());
+//                }
+//            });
+
+            Picasso.Builder builder = new Picasso.Builder(mContext);
+            builder.listener(new Picasso.Listener()
+            {
+                @Override
+                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
+                {
+                    exception.printStackTrace();
+                }
+            });
+            builder.build().load(Uri.parse(image)).into(holder.mEmotionImageViev);
+
+//            holder.mEmotionImageViev.setImageURI(Uri.parse(image));
+
+        }
         holder.mRatingTextView.setText(String.valueOf(rating));
         holder.mRatingProgress.setProgress(rating);
         holder.mTimestampTextView.setText(resultDate);

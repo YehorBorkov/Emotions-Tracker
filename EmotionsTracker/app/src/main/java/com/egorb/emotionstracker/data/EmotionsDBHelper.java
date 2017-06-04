@@ -28,7 +28,9 @@ public class EmotionsDBHelper extends SQLiteOpenHelper {
                 EmotionsContract.EmotionsEntry.COLUMN_COMMENT + " TEXT, " +
                 EmotionsContract.EmotionsEntry.COLUMN_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
                 EmotionsContract.EmotionsEntry.COLUMN_IMAGE + " TEXT NOT NULL, " +
-                EmotionsContract.EmotionsEntry.COLUMN_PLACE_ID + " TEXT" +
+                EmotionsContract.EmotionsEntry.COLUMN_PLACE_ID + " TEXT, " +
+                EmotionsContract.EmotionsEntry.COLUMN_PLACE_NAME + " TEXT, " +
+                EmotionsContract.EmotionsEntry.COLUMN_PLACE_ADDRESS + " TEXT" +
                 ");";
         db.execSQL(SQL_CREATE_EMOTIONS_TABLE);
     }

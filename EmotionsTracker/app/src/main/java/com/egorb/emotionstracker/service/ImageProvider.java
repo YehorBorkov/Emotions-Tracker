@@ -1,9 +1,6 @@
 package com.egorb.emotionstracker.service;
 
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.egorb.emotionstracker.R;
