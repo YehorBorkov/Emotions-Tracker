@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/rv_item_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:srcCompat="@android:color/holo_green_dark"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="0dp"
+        android:layout_marginStart="0dp" />
+
+    <TextView
+        android:id="@+id/rv_item_text_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        tools:text="100"
+        android:textSize="22dp"
+        app:layout_constraintLeft_toRightOf="@id/rv_item_image"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/rv_item_progress_rating"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="275dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintHorizontal_bias="0.369"
+        app:layout_constraintLeft_toRightOf="@+id/rv_item_image"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rv_item_text_rating" />
+
+    <TextView
+        android:id="@+id/rv_item_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="8dp"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="@+id/rv_item_progress_rating"
+        app:layout_constraintTop_toBottomOf="@+id/rv_item_progress_rating"
+        tools:text="13:00 10.05.1998" />
+
+    <TextView
+        android:id="@+id/rv_item_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:layout_marginTop="8dp"
+        android:textSize="15sp"
+        app:layout_constraintRight_toRightOf="@+id/rv_item_progress_rating"
+        app:layout_constraintTop_toBottomOf="@+id/rv_item_progress_rating"
+        tools:text="Киев, город Киев" />
+
+</android.support.constraint.ConstraintLayout>
