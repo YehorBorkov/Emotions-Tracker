@@ -9,6 +9,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private EmotionsListAdapter mAdapter;
     private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
     private FloatingActionButton mFloatingActionButton;
 
     @Override
@@ -35,9 +37,13 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_main);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new EmotionsListAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
+        DividerItemDecoration dividerItemDecoration =
+                new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL);
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -90,6 +96,20 @@ public class MainActivity extends AppCompatActivity implements
 
             @Override
             public Cursor loadInBackground() {
+//                String[] projection =
+//                        {
+//                                EmotionsContract.EmotionsEntry._ID,
+//                                EmotionsContract.EmotionsEntry.COLUMN_RATING,
+//                                EmotionsContract.EmotionsEntry.COLUMN_COMMENT,
+//                                EmotionsContract.EmotionsEntry.COLUMN_IMAGE,
+//                                EmotionsContract.EmotionsEntry.COLUMN_PLACE_ID,
+//                                "strftime('%m'," +
+//                                        EmotionsContract.EmotionsEntry.COLUMN_TIMESTAMP +") as "
+//                                        + EmotionsContract.EmotionsEntry.DATE_MONTH,
+//                                "strftime('%d'," +
+//                                        EmotionsContract.EmotionsEntry.COLUMN_TIMESTAMP +") as "
+//                                        + EmotionsContract.EmotionsEntry.DATE_DAY
+//                        };
                 try {
                     return getContentResolver().query(EmotionsContract.EmotionsEntry.CONTENT_URI,
                             null,

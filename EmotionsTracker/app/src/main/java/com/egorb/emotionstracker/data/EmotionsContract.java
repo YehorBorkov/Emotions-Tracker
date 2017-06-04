@@ -3,10 +3,6 @@ package com.egorb.emotionstracker.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-/**
- * Created by egorb on 03-06-2017.
- */
-
 public final class EmotionsContract {
     private EmotionsContract() {}
 
@@ -26,5 +22,6 @@ public final class EmotionsContract {
         public static final String COLUMN_TIMESTAMP = "timestamp";
         public static final String COLUMN_IMAGE = "image";
         public static final String COLUMN_PLACE_ID = "place_id";
+
     }
 }

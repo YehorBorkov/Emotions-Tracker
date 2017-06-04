@@ -39,9 +39,17 @@ public class AddActivity extends AppCompatActivity {
                 String rating = mRatingEditText.getText().toString();
                 String comment = mCommentEditText.getText().toString();
                 if (!rating.equals("") && !comment.equals("")) {
-                    int ratingNum = Integer.parseInt(rating);
-                    addNewEmotion(ratingNum, comment);
-                    finish();
+                    try {
+                        int ratingNum = Integer.parseInt(rating);
+                        if (ratingNum < 101) {
+                            addNewEmotion(ratingNum, comment);
+                            finish();
+                        } else {
+                            throw new NumberFormatException("Value too big");
+                        }
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(getBaseContext(), "Please enter numeric rating value (0-100)", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(getBaseContext(), "Please enter values", Toast.LENGTH_SHORT).show();
                 }

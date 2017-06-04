@@ -3,6 +3,8 @@ package com.egorb.emotionstracker.service;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +14,10 @@ import android.widget.TextView;
 import com.egorb.emotionstracker.R;
 import com.egorb.emotionstracker.data.EmotionsContract;
 
-/**
- * Created by egorb on 04-06-2017.
- */
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class EmotionsListAdapter extends RecyclerView.Adapter<EmotionsListAdapter.EmotionsViewholder> {
 
@@ -29,23 +32,35 @@ public class EmotionsListAdapter extends RecyclerView.Adapter<EmotionsListAdapte
     public EmotionsListAdapter.EmotionsViewholder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.main_rv_item, parent, false);
+        DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
+        view.setMinimumWidth(displayMetrics.widthPixels);
+//        Log.i("View width", String.valueOf(view.getWidth()));
         return new EmotionsViewholder(view);
     }
 
     @Override
     public void onBindViewHolder(EmotionsListAdapter.EmotionsViewholder holder, int position) {
         if (!mCursor.moveToPosition(position))
-            return; // bail if returned null
+            return;
 
         int id = mCursor.getInt(mCursor.getColumnIndex(EmotionsContract.EmotionsEntry._ID));
         int rating = mCursor.getInt(mCursor.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_RATING));
-        String timestamp = mCursor.getString(mCursor.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_TIMESTAMP));
-        String place = mCursor.getString(mCursor.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_PLACE_ID));
+        String dateData = mCursor.getString(mCursor.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_TIMESTAMP));
+        Calendar date = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        String resultDate;
+        try {
+            date.setTime(sdf.parse(dateData));
+            resultDate = new SimpleDateFormat("MMM dd", Locale.ENGLISH).format(date.getTime());
+        } catch (ParseException e) {
+            resultDate = "Unable to fetch date data";
+        }
+        String comment = mCursor.getString(mCursor.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_COMMENT));
 
         holder.mRatingTextView.setText(String.valueOf(rating));
         holder.mRatingProgress.setProgress(rating);
-        holder.mTimestampTextView.setText(timestamp);
-        holder.mPlaceTextView.setText(place);
+        holder.mTimestampTextView.setText(resultDate);
+        holder.mCommentTextView.setText(comment);
 
         holder.itemView.setTag(id);
     }
@@ -73,15 +88,15 @@ public class EmotionsListAdapter extends RecyclerView.Adapter<EmotionsListAdapte
     }
 
     class EmotionsViewholder extends RecyclerView.ViewHolder {
-        TextView mRatingTextView, mTimestampTextView, mPlaceTextView;
+        TextView mRatingTextView, mCommentTextView, mTimestampTextView;
         ProgressBar mRatingProgress;
 
         public EmotionsViewholder(View view) {
             super(view);
             mRatingTextView = (TextView) view.findViewById(R.id.rv_item_text_rating);
             mRatingProgress = (ProgressBar) view.findViewById(R.id.rv_item_progress_rating);
-            mTimestampTextView = (TextView) view.findViewById(R.id.rv_item_timestamp);
-            mPlaceTextView = (TextView) view.findViewById(R.id.rv_item_place);
+            mCommentTextView = (TextView) view.findViewById(R.id.rv_item_text_comment);
+            mTimestampTextView = (TextView) view.findViewById(R.id.rv_item_text_timestamp);
         }
     }
 }

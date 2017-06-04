@@ -3,63 +3,63 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:padding="10dp">
+    android:layout_width="1080px"
+    android:layout_height="112dp"
+    android:padding="16dp">
+
 
     <ImageView
         android:id="@+id/rv_item_image"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        app:srcCompat="@android:color/holo_green_dark"
+        app:srcCompat="@drawable/smiley_smile_2"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="0dp"
-        android:layout_marginStart="0dp" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/rv_item_text_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
+        android:textSize="28sp"
         tools:text="100"
-        android:textSize="22dp"
-        app:layout_constraintLeft_toRightOf="@id/rv_item_image"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="2dp"/>
 
     <ProgressBar
         android:id="@+id/rv_item_progress_rating"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="275dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintHorizontal_bias="0.369"
-        app:layout_constraintLeft_toRightOf="@+id/rv_item_image"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_item_text_rating" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rv_item_text_rating"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="154dp"
+        android:layout_marginEnd="0dp"/>
 
     <TextView
-        android:id="@+id/rv_item_timestamp"
-        android:layout_width="wrap_content"
+        android:id="@+id/rv_item_text_comment"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
+        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ex massa, pulvinar sit amet vulputate et, pulvinar sed ipsum. Curabitur est justo, ultricies vel justo nec, mollis facilisis turpis."
+        android:maxLines="2"
+        android:ellipsize="end"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rv_item_text_rating"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="96dp"
         android:layout_marginTop="8dp"
-        android:textSize="15sp"
-        app:layout_constraintLeft_toLeftOf="@+id/rv_item_progress_rating"
-        app:layout_constraintTop_toBottomOf="@+id/rv_item_progress_rating"
-        tools:text="13:00 10.05.1998" />
+        android:layout_marginEnd="64dp"/>
 
     <TextView
-        android:id="@+id/rv_item_place"
+        android:id="@+id/rv_item_text_timestamp"
+        android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
-        android:layout_marginTop="8dp"
-        android:textSize="15sp"
-        app:layout_constraintRight_toRightOf="@+id/rv_item_progress_rating"
-        app:layout_constraintTop_toBottomOf="@+id/rv_item_progress_rating"
-        tools:text="Киев, город Киев" />
+        tools:text="May 10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rv_item_text_comment"/>
 
 </android.support.constraint.ConstraintLayout>
