@@ -12,7 +12,7 @@
         android:id="@+id/rv_item_image"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        app:srcCompat="@drawable/smiley_smile_2"
+        app:srcCompat="@drawable/ic_emotion_face_100"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

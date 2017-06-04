@@ -62,7 +62,7 @@ public class AddActivity extends AppCompatActivity {
         ContentValues cv = new ContentValues();
         cv.put(EmotionsContract.EmotionsEntry.COLUMN_RATING, rating);
         cv.put(EmotionsContract.EmotionsEntry.COLUMN_COMMENT, comment);
-        cv.put(EmotionsContract.EmotionsEntry.COLUMN_IMAGE, "there are no image");
+        cv.put(EmotionsContract.EmotionsEntry.COLUMN_IMAGE, String.valueOf(rating));
         cv.put(EmotionsContract.EmotionsEntry.COLUMN_PLACE_ID, "Центр боли и страданий");
         Uri uri = getContentResolver().insert(EmotionsContract.EmotionsEntry.CONTENT_URI, cv);
         if(uri != null) {

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -56,7 +57,9 @@ public class EmotionsListAdapter extends RecyclerView.Adapter<EmotionsListAdapte
             resultDate = "Unable to fetch date data";
         }
         String comment = mCursor.getString(mCursor.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_COMMENT));
+        String image = mCursor.getString(mCursor.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_IMAGE));
 
+        ImageProvider.setImage(mContext, holder.mEmotionImageViev, image);
         holder.mRatingTextView.setText(String.valueOf(rating));
         holder.mRatingProgress.setProgress(rating);
         holder.mTimestampTextView.setText(resultDate);
@@ -88,11 +91,13 @@ public class EmotionsListAdapter extends RecyclerView.Adapter<EmotionsListAdapte
     }
 
     class EmotionsViewholder extends RecyclerView.ViewHolder {
+        ImageView mEmotionImageViev;
         TextView mRatingTextView, mCommentTextView, mTimestampTextView;
         ProgressBar mRatingProgress;
 
         public EmotionsViewholder(View view) {
             super(view);
+            mEmotionImageViev = (ImageView) view.findViewById(R.id.rv_item_image);
             mRatingTextView = (TextView) view.findViewById(R.id.rv_item_text_rating);
             mRatingProgress = (ProgressBar) view.findViewById(R.id.rv_item_progress_rating);
             mCommentTextView = (TextView) view.findViewById(R.id.rv_item_text_comment);
