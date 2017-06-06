@@ -28,7 +28,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.AddActivity" />
-        <activity android:name=".activities.DetailsActivity" />
+        <activity
+            android:name=".activities.DetailsActivity"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

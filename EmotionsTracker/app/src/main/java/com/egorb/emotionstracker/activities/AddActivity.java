@@ -38,18 +38,21 @@ public class AddActivity extends AppCompatActivity {
         mSelectPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+//                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//                getIntent.setType("image/*");
+//                startActivityForResult(Intent.createChooser(getIntent, "Select Picture"), PICK_IMAGE);
+
                 Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
                 getIntent.setType("image/*");
 
-//                Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                pickIntent.setType("image/*");
-//
-//                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
-//                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+                Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                pickIntent.setType("image/*");
 
-//                startActivityForResult(chooserIntent, PICK_IMAGE);
+                Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
 
-                startActivityForResult(Intent.createChooser(getIntent, "Select Picture"), PICK_IMAGE);
+                startActivityForResult(chooserIntent, PICK_IMAGE);
             }
         });
 

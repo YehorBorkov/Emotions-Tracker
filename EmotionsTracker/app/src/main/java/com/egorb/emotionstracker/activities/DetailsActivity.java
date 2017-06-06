@@ -20,14 +20,21 @@ import com.egorb.emotionstracker.data.EmotionsContract;
 import com.egorb.emotionstracker.service.ImageProvider;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 public class DetailsActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
+
+    public static final String TAG = DetailsActivity.class.getSimpleName();
 
     private static final int DETAIL_LOADER_ID = 552;
     private Uri mUri;
 
     ConstraintLayout mDetailsWrapper;
-    TextView mTextDetailRating;
+    TextView mTextDetailRating, mTextDetailDateTime;
     ProgressBar mProgressDetailProgress;
     EditText mTextDetailComment;
     ImageView mImageDetailImage;
@@ -42,8 +49,16 @@ public class DetailsActivity extends AppCompatActivity implements
 
         mDetailsWrapper = (ConstraintLayout) findViewById(R.id.cl_detail_wrapper);
         mTextDetailRating = (TextView) findViewById(R.id.tv_details_rating);
+        mTextDetailDateTime= (TextView) findViewById(R.id.tv_detail_date_time);
         mProgressDetailProgress = (ProgressBar) findViewById(R.id.pb_details_progress);
         mTextDetailComment = (EditText) findViewById(R.id.et_details_comment);
+        mTextDetailComment.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (v.getId() == mTextDetailComment.getId()) {
+                    mTextDetailComment.setCursorVisible(true);
+                }
+            }
+        });
         mImageDetailImage = (ImageView) findViewById(R.id.iv_details_image);
 
         mProgressDetailLoad = (ProgressBar) findViewById(R.id.pb_details_load);
@@ -110,37 +125,38 @@ public class DetailsActivity extends AppCompatActivity implements
             return;
         }
 
-        Log.d("Tag", String.valueOf(data.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_RATING)));
+        Log.i(TAG, String.valueOf(mProgressDetailLoad.getVisibility()));
+        Log.i(TAG, String.valueOf(mDetailsWrapper.getVisibility()));
 
         int rating = data.getInt(data.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_RATING));
+        String dateData = data.getString(data.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_TIMESTAMP));
+        Calendar date = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        String resultDate;
+        try {
+            date.setTime(sdf.parse(dateData));
+            resultDate = new SimpleDateFormat("MMM dd", Locale.ENGLISH).format(date.getTime());
+        } catch (ParseException e) {
+            resultDate = "Unable to fetch date data";
+        }
+        String placeName = data.getString(data.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_PLACE_NAME));
         String comment = data.getString(data.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_COMMENT));
         final String image = data.getString(data.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_IMAGE));
-
-//        int rating = 50;
-//        String comment = "Some random bullshit";
-//        final String image = "64";
 
         if (image.length() < 4) {
             ImageProvider.setImage(this, mImageDetailImage, image);
         } else {
-            Picasso.Builder builder = new Picasso.Builder(this);
-            builder.listener(new Picasso.Listener()
-            {
-                @Override
-                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-                {
-                    exception.printStackTrace();
-                }
-            });
-            builder.build().load(Uri.parse(image)).into(mImageDetailImage);
+            Picasso.with(this).load(Uri.parse(image)).into(mImageDetailImage);
         }
 
         mTextDetailRating.setText(String.valueOf(rating));
         mProgressDetailProgress.setProgress(rating);
+        mTextDetailDateTime.setText("Happened on " + resultDate + " somewhere near " + placeName);
         mTextDetailComment.setText(comment);
 
         mDetailsWrapper.setVisibility(View.VISIBLE);
         mProgressDetailLoad.setVisibility(View.INVISIBLE);
+
     }
 
     @Override

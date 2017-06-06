@@ -71,31 +71,7 @@ public class EmotionsListAdapter extends RecyclerView.Adapter<EmotionsListAdapte
         if (image.length() < 4) {
             ImageProvider.setImage(mContext, holder.mEmotionImageViev, image);
         } else {
-//            Log.i("Image uri:", image);
-//            Picasso.with(mContext).load(Uri.parse(image)).into(holder.mEmotionImageViev, new com.squareup.picasso.Callback() {
-//                @Override
-//                public void onSuccess() {
-//                    Log.i("Img loaded via URI", Uri.parse(image).toString());
-//                }
-//                @Override
-//                public void onError() {
-//                    Log.i("Img not loaded via URI", Uri.parse(image).toString());
-//                }
-//            });
-
-            Picasso.Builder builder = new Picasso.Builder(mContext);
-            builder.listener(new Picasso.Listener()
-            {
-                @Override
-                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-                {
-                    exception.printStackTrace();
-                }
-            });
-            builder.build().load(Uri.parse(image)).into(holder.mEmotionImageViev);
-
-//            holder.mEmotionImageViev.setImageURI(Uri.parse(image));
-
+            Picasso.with(mContext).load(Uri.parse(image)).into(holder.mEmotionImageViev);
         }
         holder.mRatingTextView.setText(String.valueOf(rating));
         holder.mRatingProgress.setProgress(rating);
@@ -147,7 +123,6 @@ public class EmotionsListAdapter extends RecyclerView.Adapter<EmotionsListAdapte
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
             int id = mCursor.getInt(mCursor.getColumnIndex(EmotionsContract.EmotionsEntry._ID));
-            Log.i("Clicked", String.valueOf(id));
             mClickHandler.onClick(id);
         }
 
