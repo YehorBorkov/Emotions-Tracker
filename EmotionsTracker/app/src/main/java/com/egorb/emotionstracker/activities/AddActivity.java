@@ -1,11 +1,14 @@
 package com.egorb.emotionstracker.activities;
 
+import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,14 +19,21 @@ import android.widget.Toast;
 
 import com.egorb.emotionstracker.R;
 import com.egorb.emotionstracker.data.EmotionsContract;
+import com.egorb.emotionstracker.service.SelectorDialogFragment;
+import com.squareup.picasso.Picasso;
 
-public class AddActivity extends AppCompatActivity {
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
-    private static final int PICK_IMAGE = 630;
+public class AddActivity extends AppCompatActivity implements SelectorDialogFragment.OnDialogOptionSelectedListener {
 
     Button mSelectPhoto;
     ImageView mSelectedPhoto;
     EditText mRatingEditText, mCommentEditText;
+    String mCurrentPhotoPath = null;
     Uri mSelectedImageUri = null;
 
     @Override
@@ -38,11 +48,18 @@ public class AddActivity extends AppCompatActivity {
         mSelectPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DialogFragment dialog = new SelectorDialogFragment();
+                dialog.show(getFragmentManager(), "Select option");
+            }
+        });
 
-//                Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-//                getIntent.setType("image/*");
-//                startActivityForResult(Intent.createChooser(getIntent, "Select Picture"), PICK_IMAGE);
+        mSelectedPhoto = (ImageView) findViewById(R.id.iv_add_image);
+    }
 
+    @Override
+    public void onDialogueOptionSelected(int action) {
+        switch (action) {
+            case SelectorDialogFragment.GALLERY_SELECTED:
                 Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
                 getIntent.setType("image/*");
 
@@ -52,20 +69,70 @@ public class AddActivity extends AppCompatActivity {
                 Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
                 chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
 
-                startActivityForResult(chooserIntent, PICK_IMAGE);
-            }
-        });
+                startActivityForResult(chooserIntent, SelectorDialogFragment.GALLERY_SELECTED);
+                break;
+            case SelectorDialogFragment.CAMERA_SELECTED:
+                Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    Log.e("AddActivity", "Error with file", ex);
+                }
+                if (photoFile != null) {
+                    mSelectedImageUri = FileProvider.getUriForFile(this,
+                            "com.egorb.emotionstracker.fileprovider",
+                            photoFile);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSelectedImageUri);
+                    startActivityForResult(intent, SelectorDialogFragment.CAMERA_SELECTED);
+                }
+        }
+    }
 
-        mSelectedPhoto = (ImageView) findViewById(R.id.iv_add_image);
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("MMM_dd_HHmmss", Locale.ENGLISH).format(new Date());
+        String imageFileName = "EmotionsTracker" + timeStamp;
+        File storageDir = new File(getFilesDir(), "images");
+        File image = null;
+        try {
+            storageDir.mkdir();
+            image = File.createTempFile(
+                    imageFileName,
+                    ".jpg",
+                    storageDir
+            );
+            mCurrentPhotoPath = image.getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return image;
+    }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
-            mSelectedImageUri = data.getData();
-            mSelectPhoto.setVisibility(View.INVISIBLE);
-            mSelectedPhoto.setImageURI(mSelectedImageUri);
-            mSelectedPhoto.setVisibility(View.VISIBLE);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case SelectorDialogFragment.GALLERY_SELECTED:
+                    mSelectedImageUri = data.getData();
+                    mSelectPhoto.setVisibility(View.INVISIBLE);
+                    mSelectedPhoto.setImageURI(mSelectedImageUri);
+                    mSelectedPhoto.setVisibility(View.VISIBLE);
+                    break;
+                case SelectorDialogFragment.CAMERA_SELECTED:
+                    galleryAddPic();
+                    mSelectPhoto.setVisibility(View.INVISIBLE);
+                    mSelectedPhoto.setImageURI(mSelectedImageUri);
+                    mSelectedPhoto.setVisibility(View.VISIBLE);
+                    break;
+            }
         } else {
             Toast.makeText(this, "Mission failed, we're gonna get him next time", Toast.LENGTH_SHORT).show();
         }

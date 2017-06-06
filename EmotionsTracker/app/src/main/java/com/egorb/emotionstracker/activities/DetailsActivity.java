@@ -126,9 +126,6 @@ public class DetailsActivity extends AppCompatActivity implements
             return;
         }
 
-        Log.i(TAG, String.valueOf(mProgressDetailLoad.getVisibility()));
-        Log.i(TAG, String.valueOf(mDetailsWrapper.getVisibility()));
-
         int rating = data.getInt(data.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_RATING));
         String dateData = data.getString(data.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_TIMESTAMP));
         Calendar date = Calendar.getInstance();
