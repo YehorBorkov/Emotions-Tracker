@@ -1,42 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <ProgressBar
+            android:id="@+id/pb_details_load"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/iv_details_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:minHeight="@dimen/detail_image_min_height"
+            android:maxHeight="@dimen/detail_image_max_height"
+            app:srcCompat="@android:color/holo_blue_light"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/cl_detail_wrapper"
-            android:layout_width="1080px"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context="com.egorb.emotionstracker.activities.DetailsActivity">
-
-            <ImageView
-                android:id="@+id/iv_details_image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:maxHeight="320dp"
-                app:srcCompat="@android:color/holo_blue_light"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="0dp" />
+            android:minHeight="?android:attr/listPreferredItemHeight"
+            android:paddingLeft="@dimen/small"
+            android:paddingTop="@dimen/large"
+            android:paddingRight="@dimen/small"
+            android:paddingBottom="@dimen/nano" >
 
             <TextView
                 android:id="@+id/tv_details_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="75"
-                android:textSize="32sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginStart="32dp"
-                app:layout_constraintTop_toBottomOf="parent"
-                android:layout_marginTop="336dp" />
+                tools:text="75" />
 
             <ProgressBar
                 android:id="@+id/pb_details_progress"
@@ -44,57 +55,46 @@
                 android:progressDrawable="@drawable/progress_bar_gradient"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/tv_details_rating"
                 app:layout_constraintTop_toTopOf="@+id/tv_details_rating"
-                android:layout_marginTop="12dp"
-                android:layout_marginStart="16dp"
-                app:layout_constraintHorizontal_bias="0.0"
-                android:layout_marginEnd="32dp" />
-
-            <EditText
-                android:id="@+id/et_details_comment"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:ems="10"
-                android:inputType="textMultiLine"
-                tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sagittis eleifend efficitur. Pellentesque justo ipsum, lacinia id efficitur nec, consequat accumsan augue. Integer vehicula ullamcorper nisi vel facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse convallis vulputate dui mollis mollis. Sed sed ante nibh. Proin ac ornare orci. Pellentesque condimentum viverra mollis."
-                android:cursorVisible="false"
-                android:textCursorDrawable="@null"
-                android:textColor="#212121"
-                android:background="@null"
-                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/tv_details_rating"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_details_rating"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/tv_detail_date_time" />
+                android:layout_marginStart="@dimen/small" />
 
             <TextView
                 android:id="@+id/tv_detail_date_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="T'was on May 10 somewhere around Vorzel'"
-                android:textColor="#616161"
-                android:layout_marginTop="16dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="#757575"
+                app:layout_constraintLeft_toLeftOf="@+id/details_guideline"
                 app:layout_constraintTop_toBottomOf="@+id/tv_details_rating"
-                android:layout_marginLeft="8dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginRight="8dp"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp" />
+                app:layout_constraintRight_toLeftOf="@+id/details_guideline"/>
+
+            <EditText
+                android:id="@+id/et_details_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sagittis eleifend efficitur. Pellentesque justo ipsum, lacinia id efficitur nec, consequat accumsan augue. Integer vehicula ullamcorper nisi vel facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse convallis vulputate dui mollis mollis. Sed sed ante nibh. Proin ac ornare orci. Pellentesque condimentum viverra mollis."
+                android:cursorVisible="false"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:background="@null"
+                app:layout_constraintLeft_toLeftOf="@+id/details_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_date_time"
+                app:layout_constraintRight_toLeftOf="@+id/details_guideline"
+                android:layout_marginTop="@dimen/medium" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/details_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
 
         </android.support.constraint.ConstraintLayout>
-
-        <ProgressBar
-            android:id="@+id/pb_details_load"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"/>
-
-    </FrameLayout>
+    </LinearLayout>
 
 </ScrollView>

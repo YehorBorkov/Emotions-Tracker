@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Default margin and padding values -->
+
+    <dimen name="nano">8dp</dimen>
+    <dimen name="small">12dp</dimen>
+    <dimen name="medium">16dp</dimen>
+    <dimen name="large">24dp</dimen>
+    <dimen name="jumbo">32dp</dimen>
+
+    <!-- Image/icon sizes -->
+
+    <dimen name="rv_icon_size">80dp</dimen>
+    <dimen name="detail_image_min_height">208dp</dimen>
+    <dimen name="detail_image_max_height">320dp</dimen>
+
+</resources>

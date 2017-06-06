@@ -1,38 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="1080px"
-    android:layout_height="112dp"
-    android:padding="16dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:paddingLeft="@dimen/small"
+    android:paddingTop="@dimen/nano"
+    android:paddingRight="@dimen/small"
+    android:paddingBottom="@dimen/nano" >
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/rv_item_image"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:srcCompat="@drawable/ic_emotion_face_100"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <!--<ImageView-->
-        <!--android:id="@+id/rv_item_image"-->
-        <!--android:layout_width="80dp"-->
-        <!--android:layout_height="80dp"-->
-        <!--app:srcCompat="@drawable/ic_emotion_face_100"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent" />-->
+        android:layout_width="@dimen/rv_icon_size"
+        android:layout_height="@dimen/rv_icon_size"
+        app:srcCompat="@drawable/smiley_smile_2"
+        app:layout_constraintTop_toTopOf="@+id/rv_guideline"
+        app:layout_constraintBottom_toTopOf="@+id/rv_guideline"
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <TextView
         android:id="@+id/rv_item_text_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="28sp"
-        tools:text="100"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="96dp"
-        android:layout_marginTop="2dp"/>
+        android:layout_marginStart="@dimen/small"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        app:layout_constraintBottom_toTopOf="@+id/rv_guideline"
+        app:layout_constraintLeft_toRightOf="@+id/rv_item_image"
+        tools:text="100"/>
+
+    <TextView
+        android:id="@+id/rv_item_text_comment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:adjustViewBounds="true"
+        android:maxLines="2"
+        android:ellipsize="end"
+        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ex massa, pulvinar sit amet vulputate et, pulvinar sed ipsum. Curabitur est justo, ultricies vel justo nec, mollis facilisis turpis."
+        app:layout_constraintTop_toTopOf="@+id/rv_guideline"
+        app:layout_constraintLeft_toLeftOf="@+id/rv_item_text_rating"
+        app:layout_constraintRight_toLeftOf="@+id/rv_item_text_timestamp"
+        android:layout_marginEnd="@dimen/small"/>
 
     <ProgressBar
         android:id="@+id/rv_item_progress_rating"
@@ -40,34 +51,26 @@
         android:progressDrawable="@drawable/progress_bar_gradient"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rv_item_text_rating"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="154dp"
-        android:layout_marginEnd="0dp"/>
-
-    <TextView
-        android:id="@+id/rv_item_text_comment"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ex massa, pulvinar sit amet vulputate et, pulvinar sed ipsum. Curabitur est justo, ultricies vel justo nec, mollis facilisis turpis."
-        android:maxLines="2"
-        android:ellipsize="end"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_item_text_rating"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="96dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="64dp"/>
+        app:layout_constraintLeft_toRightOf="@+id/rv_item_text_rating"
+        app:layout_constraintBottom_toTopOf="@+id/rv_guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="@dimen/small"/>
 
     <TextView
         android:id="@+id/rv_item_text_timestamp"
-        android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:text="May 10"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rv_item_text_comment"/>
+        app:layout_constraintTop_toTopOf="@+id/rv_guideline"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/rv_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5"/>
 
 </android.support.constraint.ConstraintLayout>

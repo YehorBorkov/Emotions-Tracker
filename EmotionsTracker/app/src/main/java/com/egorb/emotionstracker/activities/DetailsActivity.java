@@ -33,13 +33,13 @@ public class DetailsActivity extends AppCompatActivity implements
     private static final int DETAIL_LOADER_ID = 552;
     private Uri mUri;
 
+    ProgressBar mProgressDetailLoad;
+
     ConstraintLayout mDetailsWrapper;
+    ImageView mImageDetailImage;
     TextView mTextDetailRating, mTextDetailDateTime;
     ProgressBar mProgressDetailProgress;
     EditText mTextDetailComment;
-    ImageView mImageDetailImage;
-
-    ProgressBar mProgressDetailLoad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +82,7 @@ public class DetailsActivity extends AppCompatActivity implements
 
             @Override
             protected void onStartLoading() {
+                mImageDetailImage.setVisibility(View.INVISIBLE);
                 mDetailsWrapper.setVisibility(View.INVISIBLE);
                 mProgressDetailLoad.setVisibility(View.VISIBLE);
                 if (mData != null) {
@@ -154,13 +155,15 @@ public class DetailsActivity extends AppCompatActivity implements
         mTextDetailDateTime.setText("Happened on " + resultDate + " somewhere near " + placeName);
         mTextDetailComment.setText(comment);
 
+        mImageDetailImage.setVisibility(View.VISIBLE);
         mDetailsWrapper.setVisibility(View.VISIBLE);
-        mProgressDetailLoad.setVisibility(View.INVISIBLE);
+        mProgressDetailLoad.setVisibility(View.GONE);
 
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        mImageDetailImage.setVisibility(View.INVISIBLE);
         mDetailsWrapper.setVisibility(View.INVISIBLE);
         mProgressDetailLoad.setVisibility(View.VISIBLE);
     }
