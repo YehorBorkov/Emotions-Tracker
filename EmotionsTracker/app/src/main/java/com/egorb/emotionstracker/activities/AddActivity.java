@@ -1,15 +1,15 @@
 package com.egorb.emotionstracker.activities;
 
-import android.Manifest;
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
@@ -23,13 +23,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.egorb.emotionstracker.R;
 import com.egorb.emotionstracker.data.EmotionsContract;
 import com.egorb.emotionstracker.service.PermissionChecker;
 import com.egorb.emotionstracker.service.SelectorDialogFragment;
-import com.squareup.picasso.Picasso;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,15 +45,24 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class AddActivity extends AppCompatActivity implements SelectorDialogFragment.OnDialogOptionSelectedListener {
+public class AddActivity extends AppCompatActivity implements
+        SelectorDialogFragment.OnDialogOptionSelectedListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    private static final int MEDIA_PERMISSION_REQUEST = 174;
+    public static final String TAG = AddActivity.class.getSimpleName();
+    private static final int PLACE_PICKER_REQUEST_ID = 260;
 
-    Button mSelectPhoto;
+    String mPlaceId = null;
+    String mPlaceName = null;
+    String mPlaceAddress = null;
+
+    Button mSelectPhoto, mSelectLocation;
     ImageView mSelectedPhoto;
     EditText mRatingEditText, mCommentEditText;
     String mCurrentPhotoPath = null;
     Uri mSelectedImageUri = null;
+
+    GoogleApiClient mGoogleClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +81,44 @@ public class AddActivity extends AppCompatActivity implements SelectorDialogFrag
             }
         });
 
+        final Activity mContext = this;
+        mSelectLocation = (Button) findViewById(R.id.btn_add_location);
+        mSelectLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast error = Toast.makeText(mContext, "Unable to launch location selector, maybe you are offline?", Toast.LENGTH_SHORT);
+                if (!PermissionChecker.checkNetworkingPermissions(getApplicationContext()))
+                    return;
+                try {
+                    PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                    Intent placePickerIntent = builder.build(mContext);
+                    startActivityForResult(placePickerIntent, PLACE_PICKER_REQUEST_ID);
+                } catch (GooglePlayServicesRepairableException e) {
+                    error.show();
+                    Log.e(TAG, String.format("GooglePlayServices Repairable [%s]", e.getMessage()));
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    error.show();
+                    Log.e(TAG, String.format("GooglePlayServices Not Available [%s]", e.getMessage()));
+                } catch (Exception e) {
+                    error.show();
+                    Log.e(TAG, String.format("PlacePicker Exception: %s", e.getMessage()));
+                }
+            }
+        });
+
         mSelectedPhoto = (ImageView) findViewById(R.id.iv_add_image);
 
         ActionBar bar = getSupportActionBar();
         if (null != bar)
             bar.setDisplayHomeAsUpEnabled(true);
+
+        mGoogleClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .enableAutoManage(this, this)
+                .build();
 
     }
 
@@ -79,16 +129,23 @@ public class AddActivity extends AppCompatActivity implements SelectorDialogFrag
         }
         switch (action) {
             case SelectorDialogFragment.GALLERY_SELECTED:
+                /*
                 Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
                 getIntent.setType("image/*");
 
-                Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent pickIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 pickIntent.setType("image/*");
 
                 Intent chooserIntent = Intent.createChooser(getIntent, "Select Image");
                 chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
 
                 startActivityForResult(chooserIntent, SelectorDialogFragment.GALLERY_SELECTED);
+                */
+                Intent openDocIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                openDocIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                openDocIntent.setType("image/*");
+
+                startActivityForResult(openDocIntent, SelectorDialogFragment.GALLERY_SELECTED);
                 break;
             case SelectorDialogFragment.CAMERA_SELECTED:
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -108,20 +165,13 @@ public class AddActivity extends AppCompatActivity implements SelectorDialogFrag
         }
     }
 
-    /*
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                String[] requiredPermissions = new String[]{ Manifest.permission.MANAGE_DOCUMENTS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE };
-                requestPermissions(requiredPermissions, MEDIA_PERMISSION_REQUEST);
-            }
-     */
-
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("MMM_dd_HHmmss", Locale.ENGLISH).format(new Date());
         String imageFileName = "EmotionsTracker" + timeStamp;
-        File storageDir = new File(getFilesDir(), "images");
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = null;
         try {
-            storageDir.mkdir();
+            storageDir.mkdirs();
             image = File.createTempFile(
                     imageFileName,
                     ".jpg",
@@ -148,19 +198,31 @@ public class AddActivity extends AppCompatActivity implements SelectorDialogFrag
             switch (requestCode) {
                 case SelectorDialogFragment.GALLERY_SELECTED:
                     mSelectedImageUri = data.getData();
-                    mSelectPhoto.setVisibility(View.INVISIBLE);
+                    mSelectPhoto.setVisibility(View.GONE);
                     mSelectedPhoto.setImageURI(mSelectedImageUri);
                     mSelectedPhoto.setVisibility(View.VISIBLE);
                     break;
                 case SelectorDialogFragment.CAMERA_SELECTED:
                     galleryAddPic();
-                    mSelectPhoto.setVisibility(View.INVISIBLE);
+                    mSelectPhoto.setVisibility(View.GONE);
                     mSelectedPhoto.setImageURI(mSelectedImageUri);
                     mSelectedPhoto.setVisibility(View.VISIBLE);
                     break;
+                case PLACE_PICKER_REQUEST_ID:
+                    Place selectedPlace = PlacePicker.getPlace(this, data);
+                    mPlaceId = selectedPlace.getId();
+                    mPlaceName = (String) selectedPlace.getName();
+                    mPlaceAddress = (String) selectedPlace.getAddress();
+                    View placeInfoView = findViewById(R.id.location_info_wrapper);
+                    TextView placeName = (TextView) placeInfoView.findViewById(R.id.place_name_text_view);
+                    TextView placeAddress = (TextView) placeInfoView.findViewById(R.id.place_address_text_view);
+                    placeName.setText(mPlaceName);
+                    placeAddress.setText(mPlaceAddress);
+                    mSelectLocation.setVisibility(View.GONE);
+                    placeInfoView.setVisibility(View.VISIBLE);
             }
         } else {
-            Toast.makeText(this, "Mission failed, we're gonna get him next time", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Mission Failed, We’ll Get ’Em Next Time", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -206,17 +268,33 @@ public class AddActivity extends AppCompatActivity implements SelectorDialogFrag
         cv.put(EmotionsContract.EmotionsEntry.COLUMN_USERNAME, username);
         cv.put(EmotionsContract.EmotionsEntry.COLUMN_RATING, rating);
         cv.put(EmotionsContract.EmotionsEntry.COLUMN_COMMENT, comment);
-        if (null != mSelectedImageUri) {
-            cv.put(EmotionsContract.EmotionsEntry.COLUMN_IMAGE, mSelectedImageUri.toString());
-        } else {
-            cv.put(EmotionsContract.EmotionsEntry.COLUMN_IMAGE, String.valueOf(rating));
-        }
-        cv.put(EmotionsContract.EmotionsEntry.COLUMN_PLACE_ID, "ChIJLfpSBfIwK0cRyqkIVNPOb3s");
-        cv.put(EmotionsContract.EmotionsEntry.COLUMN_PLACE_NAME, "Vorzel'");
-        cv.put(EmotionsContract.EmotionsEntry.COLUMN_PLACE_ADDRESS, "Vorzel', Kyivs'ka oblast, Ukraine");
+        cv.put(EmotionsContract.EmotionsEntry.COLUMN_IMAGE,
+                null != mSelectedImageUri ? mSelectedImageUri.toString() : String.valueOf(rating));
+        cv.put(EmotionsContract.EmotionsEntry.COLUMN_PLACE_ID,
+                null != mPlaceId ? mPlaceId : null);
+        cv.put(EmotionsContract.EmotionsEntry.COLUMN_PLACE_NAME,
+                null != mPlaceName ? mPlaceName : null);
+        cv.put(EmotionsContract.EmotionsEntry.COLUMN_PLACE_ADDRESS,
+                null != mPlaceAddress ? mPlaceAddress : null);
         Uri uri = getContentResolver().insert(EmotionsContract.EmotionsEntry.CONTENT_URI, cv);
         if(uri != null) {
             Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.i(TAG, "API client connection successful!");
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i(TAG, "API client connection suspended");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.i(TAG, "API client connection failed");
+    }
+
 }

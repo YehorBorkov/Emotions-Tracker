@@ -145,6 +145,7 @@ public class DetailsActivity extends AppCompatActivity implements
             resultDate = "Unable to fetch date data";
         }
         String placeName = data.getString(data.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_PLACE_NAME));
+        String placeAddress = data.getString(data.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_PLACE_ADDRESS));
         String comment = data.getString(data.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_COMMENT));
         final String image = data.getString(data.getColumnIndex(EmotionsContract.EmotionsEntry.COLUMN_IMAGE));
 
@@ -154,15 +155,28 @@ public class DetailsActivity extends AppCompatActivity implements
             Picasso.with(this).load(Uri.parse(image)).into(mImageDetailImage);
         }
 
+        Log.i("DetailsActivity", String.valueOf(placeName));
+
         mTextDetailRating.setText(String.valueOf(rating));
         mProgressDetailProgress.setProgress(rating);
-        mTextDetailDateTime.setText("Happened on " + resultDate + " somewhere near " + placeName);
+        String finalPlaceName = null == placeName ?
+                " in the middle of nowhere" : " near the " + placeName;
+        mTextDetailDateTime.setText("Happened on " + resultDate + finalPlaceName);
         mTextDetailComment.setText(comment);
+
+        if (null != placeName) {
+            Log.i("DetailsActivity", "Place layout should be visible");
+            View placeInfoView = findViewById(R.id.details_location_info_wrapper);
+            TextView placeNameView = (TextView) placeInfoView.findViewById(R.id.place_name_text_view);
+            TextView placeAddressView = (TextView) placeInfoView.findViewById(R.id.place_address_text_view);
+            placeNameView.setText(placeName);
+            placeAddressView.setText(placeAddress);
+            placeInfoView.setVisibility(View.VISIBLE);
+        }
 
         mImageDetailImage.setVisibility(View.VISIBLE);
         mDetailsWrapper.setVisibility(View.VISIBLE);
         mProgressDetailLoad.setVisibility(View.GONE);
-
     }
 
     @Override

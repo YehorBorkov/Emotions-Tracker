@@ -1,70 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout 
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.egorb.emotionstracker.activities.AddActivity"
     android:padding="16dp">
 
     <EditText
         android:id="@+id/et_rating"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number"
         android:hint="Rating"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         />
 
     <EditText
         android:id="@+id/et_comment"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
         android:hint="Comment"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/et_rating"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         />
 
-    <ImageView
-        android:id="@+id/iv_add_image"
+    <Button
+        android:id="@+id/btn_add_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="400dp"
-        android:maxHeight="350dp"
-        android:adjustViewBounds="true"
-        app:srcCompat="@android:color/holo_blue_light"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/et_comment"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:visibility="invisible"/>
+        android:layout_gravity="center"
+        android:text="Pick location"
+        android:layout_marginTop="@dimen/small" />
+
+    <include
+        android:id="@+id/location_info_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/location_item_height"
+        layout="@layout/item_place_card"
+        android:layout_marginTop="@dimen/small"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/btn_add_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pick image"
-        android:layout_marginTop="16dp"
-        app:layout_constraintLeft_toLeftOf="@+id/add_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/et_comment"
-        app:layout_constraintRight_toLeftOf="@+id/add_guideline"
-        android:visibility="visible"/>
+        android:layout_gravity="center"
+        android:text="Pick image" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/add_guideline"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/iv_add_image"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        android:layout_gravity="center"
+        android:maxWidth="400dp"
+        android:maxHeight="350dp"
+        android:adjustViewBounds="true"
+        app:srcCompat="@android:color/holo_blue_light"
+        android:layout_marginTop="16dp"
+        android:visibility="gone" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

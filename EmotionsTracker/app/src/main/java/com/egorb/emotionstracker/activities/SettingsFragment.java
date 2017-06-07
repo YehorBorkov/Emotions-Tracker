@@ -66,6 +66,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                         checkBoxPreference.setChecked(false);
                         checkBoxPreference.setEnabled(true);
                         preference.setOnPreferenceChangeListener(this);
+                    } else {
                         preference.setEnabled(false);
                     }
                 }

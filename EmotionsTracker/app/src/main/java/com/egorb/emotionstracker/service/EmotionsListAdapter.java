@@ -71,7 +71,17 @@ public class EmotionsListAdapter extends RecyclerView.Adapter<EmotionsListAdapte
         if (image.length() < 4) {
             ImageProvider.setImage(mContext, holder.mEmotionImageViev, image);
         } else {
-            Picasso.with(mContext).load(Uri.parse(image)).into(holder.mEmotionImageViev);
+//            Picasso.with(mContext).load(Uri.parse(image)).into(holder.mEmotionImageViev);
+            Picasso.Builder builder = new Picasso.Builder(mContext);
+            builder.listener(new Picasso.Listener()
+            {
+                @Override
+                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
+                {
+                    exception.printStackTrace();
+                }
+            });
+            builder.build().load(Uri.parse(image)).into(holder.mEmotionImageViev);
         }
         holder.mRatingTextView.setText(String.valueOf(rating));
         holder.mRatingProgress.setProgress(rating);

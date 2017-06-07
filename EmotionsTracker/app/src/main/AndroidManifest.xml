@@ -17,6 +17,11 @@
         android:roundIcon="@drawable/smiley_smile_2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCAKpyWydogkV_kNl9aL5fW6mcwPo-OWpM" />
+
         <provider
             android:name=".data.EmotionsContentProvider"
             android:authorities="com.egorb.emotionstracker"

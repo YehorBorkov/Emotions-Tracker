@@ -71,6 +71,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_details_rating"
                 app:layout_constraintRight_toLeftOf="@+id/details_guideline"/>
 
+            <include
+                android:id="@+id/details_location_info_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/location_item_height"
+                layout="@layout/item_place_card"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="@+id/details_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_detail_date_time"
+                app:layout_constraintRight_toLeftOf="@+id/details_guideline"
+                android:layout_marginTop="@dimen/medium" />
+
             <EditText
                 android:id="@+id/et_details_comment"
                 android:layout_width="320dp"
@@ -82,7 +93,7 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
                 android:background="@null"
                 app:layout_constraintLeft_toLeftOf="@+id/details_guideline"
-                app:layout_constraintTop_toBottomOf="@+id/tv_detail_date_time"
+                app:layout_constraintTop_toBottomOf="@+id/details_location_info_wrapper"
                 app:layout_constraintRight_toLeftOf="@+id/details_guideline"
                 android:layout_marginTop="@dimen/medium" />
 
@@ -91,14 +102,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5" />
+                app:layout_constraintGuide_percent="0.5"
+                tools:layout_editor_absoluteY="105dp"
+                tools:layout_editor_absoluteX="180dp" />
 
             <android.support.constraint.Guideline
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/details_guideline_2"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="52dp" />
+                app:layout_constraintGuide_begin="52dp"
+                tools:layout_editor_absoluteY="105dp"
+                tools:layout_editor_absoluteX="64dp" />
 
         </android.support.constraint.ConstraintLayout>
     </LinearLayout>

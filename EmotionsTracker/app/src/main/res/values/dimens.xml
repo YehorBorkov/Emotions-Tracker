@@ -16,6 +16,7 @@
     <dimen name="medium">16dp</dimen>
     <dimen name="large">24dp</dimen>
     <dimen name="jumbo">32dp</dimen>
+    <dimen name="location_item_height">72dp</dimen>
 
     <!-- Image/icon sizes -->
 
@@ -23,5 +24,6 @@
     <dimen name="rv_icon_size">80dp</dimen>
     <dimen name="detail_image_min_height">208dp</dimen>
     <dimen name="detail_image_max_height">320dp</dimen>
+    <dimen name="location_info_icon_size">40dp</dimen>
 
 </resources>
