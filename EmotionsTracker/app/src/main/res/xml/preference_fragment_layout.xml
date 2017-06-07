@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/pref_permission_title"
+        android:key="pref_key_permission_settings">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/media_permission_key"
+            android:summaryOn="@string/permission_granted"
+            android:summaryOff="@string/permission_denied"
+            android:title="@string/media_permission"
+            android:enabled="true"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/location_permission_key"
+            android:summaryOn="@string/permission_granted"
+            android:summaryOff="@string/permission_denied"
+            android:title="@string/location_permission"
+            android:enabled="true"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_user_title"
+        android:key="pref_key_user_settings">
+
+        <EditTextPreference
+            android:defaultValue="@string/default_username"
+            android:key="@string/username_key"
+            android:title="@string/username_preference"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

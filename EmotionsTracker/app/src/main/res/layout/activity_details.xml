@@ -47,7 +47,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                tools:text="75" />
+                tools:text="1" />
 
             <ProgressBar
                 android:id="@+id/pb_details_progress"
@@ -56,10 +56,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@+id/tv_details_rating"
-                app:layout_constraintLeft_toRightOf="@+id/tv_details_rating"
+                app:layout_constraintLeft_toLeftOf="@+id/details_guideline_2"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_details_rating"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginStart="@dimen/small" />
+                app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
                 android:id="@+id/tv_detail_date_time"
@@ -74,7 +73,7 @@
 
             <EditText
                 android:id="@+id/et_details_comment"
-                android:layout_width="match_parent"
+                android:layout_width="320dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textMultiLine"
@@ -93,6 +92,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.5" />
+
+            <android.support.constraint.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/details_guideline_2"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="52dp" />
 
         </android.support.constraint.ConstraintLayout>
     </LinearLayout>

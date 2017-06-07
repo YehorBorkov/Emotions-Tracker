@@ -4,11 +4,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -65,6 +68,10 @@ public class DetailsActivity extends AppCompatActivity implements
 
         mUri = getIntent().getData();
         if (mUri == null) throw new NullPointerException("URI for DetailActivity cannot be null");
+
+        ActionBar bar = getSupportActionBar();
+        if (null != bar)
+            bar.setDisplayHomeAsUpEnabled(true);
 
         getSupportLoaderManager().initLoader(DETAIL_LOADER_ID, null, this);
     }
@@ -165,4 +172,12 @@ public class DetailsActivity extends AppCompatActivity implements
         mProgressDetailLoad.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

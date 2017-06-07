@@ -17,13 +17,12 @@ public class EmotionsDBHelper extends SQLiteOpenHelper {
         super(ctx, DATABASE_NAME, null, DATABASE_VERISON);
     }
 
-
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String SQL_CREATE_EMOTIONS_TABLE = "CREATE TABLE " +
                 EmotionsContract.EmotionsEntry.TABLE_NAME + " (" +
                 EmotionsContract.EmotionsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                EmotionsContract.EmotionsEntry.COLUMN_USERNAME + " TEXT NOT NULL, " +
                 EmotionsContract.EmotionsEntry.COLUMN_RATING + " INTEGER NOT NULL, " +
                 EmotionsContract.EmotionsEntry.COLUMN_COMMENT + " TEXT, " +
                 EmotionsContract.EmotionsEntry.COLUMN_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +

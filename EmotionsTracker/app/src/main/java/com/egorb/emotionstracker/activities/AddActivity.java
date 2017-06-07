@@ -1,13 +1,21 @@
 package com.egorb.emotionstracker.activities;
 
+import android.Manifest;
 import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +27,7 @@ import android.widget.Toast;
 
 import com.egorb.emotionstracker.R;
 import com.egorb.emotionstracker.data.EmotionsContract;
+import com.egorb.emotionstracker.service.PermissionChecker;
 import com.egorb.emotionstracker.service.SelectorDialogFragment;
 import com.squareup.picasso.Picasso;
 
@@ -29,6 +38,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class AddActivity extends AppCompatActivity implements SelectorDialogFragment.OnDialogOptionSelectedListener {
+
+    private static final int MEDIA_PERMISSION_REQUEST = 174;
 
     Button mSelectPhoto;
     ImageView mSelectedPhoto;
@@ -54,10 +65,18 @@ public class AddActivity extends AppCompatActivity implements SelectorDialogFrag
         });
 
         mSelectedPhoto = (ImageView) findViewById(R.id.iv_add_image);
+
+        ActionBar bar = getSupportActionBar();
+        if (null != bar)
+            bar.setDisplayHomeAsUpEnabled(true);
+
     }
 
     @Override
     public void onDialogueOptionSelected(int action) {
+        if (!PermissionChecker.checkStoragePermissions(this)) {
+            return;
+        }
         switch (action) {
             case SelectorDialogFragment.GALLERY_SELECTED:
                 Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -88,6 +107,13 @@ public class AddActivity extends AppCompatActivity implements SelectorDialogFrag
                 }
         }
     }
+
+    /*
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                String[] requiredPermissions = new String[]{ Manifest.permission.MANAGE_DOCUMENTS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE };
+                requestPermissions(requiredPermissions, MEDIA_PERMISSION_REQUEST);
+            }
+     */
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("MMM_dd_HHmmss", Locale.ENGLISH).format(new Date());
@@ -166,12 +192,18 @@ public class AddActivity extends AppCompatActivity implements SelectorDialogFrag
                     Toast.makeText(getBaseContext(), "Please enter values", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void addNewEmotion(int rating, String comment) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String username = preferences.getString(getResources().getString(R.string.username_key),
+                getResources().getString(R.string.default_username));
         ContentValues cv = new ContentValues();
+        cv.put(EmotionsContract.EmotionsEntry.COLUMN_USERNAME, username);
         cv.put(EmotionsContract.EmotionsEntry.COLUMN_RATING, rating);
         cv.put(EmotionsContract.EmotionsEntry.COLUMN_COMMENT, comment);
         if (null != mSelectedImageUri) {

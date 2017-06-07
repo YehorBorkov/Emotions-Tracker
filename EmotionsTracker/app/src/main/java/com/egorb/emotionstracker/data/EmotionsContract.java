@@ -17,6 +17,7 @@ public final class EmotionsContract {
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_EMOTIONS).build();
 
         public static final String TABLE_NAME = "emotions_table";
+        public static final String COLUMN_USERNAME = "username";
         public static final String COLUMN_RATING = "rating";
         public static final String COLUMN_COMMENT = "comment";
         public static final String COLUMN_TIMESTAMP = "timestamp";
